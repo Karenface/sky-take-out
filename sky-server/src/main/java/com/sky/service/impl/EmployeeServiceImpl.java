@@ -28,11 +28,8 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final EmployeeMapper employeeMapper;
-
-    public EmployeeServiceImpl(EmployeeMapper employeeMapper) {
-        this.employeeMapper = employeeMapper;
-    }
+    @Autowired
+    private EmployeeMapper employeeMapper;
 
     /**
      * 员工登录
@@ -88,11 +85,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
         // 默认密码：123456
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-        // 设置对象的创建时间、用户和修改时间、用户
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.addNewEmployee(employee);
 
@@ -145,9 +137,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
-
         employeeMapper.update(employee);
 
     }
@@ -161,7 +150,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void enableOrDisableEmployeeAccounts(Integer status, Long id) {
 
-        Employee employee = Employee.builder().status(status).id(id).updateTime(LocalDateTime.now()).updateUser(BaseContext.getCurrentId()).build();
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
 
         employeeMapper.update(employee);
     }
@@ -185,8 +177,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (oldPassword.equals(employee.getPassword())) {
             if (newPassword.isEmpty() || !newPassword.equals(employee.getPassword())) {
                 employee.setPassword(newPassword);
-                employee.setUpdateTime(LocalDateTime.now());
-                employee.setCreateUser(BaseContext.getCurrentId());
                 employeeMapper.update(employee);
             }
         }

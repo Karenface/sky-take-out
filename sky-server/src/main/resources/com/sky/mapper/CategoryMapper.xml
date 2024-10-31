@@ -42,4 +42,11 @@
         </where>
     </select>
 
+    <!-- List<Category> getCategoryByType(Integer type) -->
+    <select id="getCategoryByType" resultType="com.sky.entity.Category">
+        select *
+        from sky_take_out.category
+        where type = #{type}
+    </select>
+
 </mapper>

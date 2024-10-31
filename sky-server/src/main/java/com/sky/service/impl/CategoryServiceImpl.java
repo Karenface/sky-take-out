@@ -30,7 +30,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void editCategory(CategoryDTO categoryDTO) {
 
-        Category category = Category.builder().id(categoryDTO.getId()).type(categoryDTO.getType()).name(categoryDTO.getName()).sort(categoryDTO.getSort()).updateTime(LocalDateTime.now()).updateUser(BaseContext.getCurrentId()).build();
+        Category category = Category.builder()
+                .id(categoryDTO.getId())
+                .type(categoryDTO.getType())
+                .name(categoryDTO.getName())
+                .sort(categoryDTO.getSort())
+                .build();
         categoryMapper.update(category);
     }
 
@@ -62,7 +67,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void enableOrDisableCategory(Integer status, Long id) {
 
-        Category category = Category.builder().id(id).status(status).updateUser(BaseContext.getCurrentId()).updateTime(LocalDateTime.now()).build();
+        Category category = Category.builder()
+                .id(id).status(status)
+                .build();
 
         categoryMapper.update(category);
 
@@ -80,10 +87,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .type(categoryDTO.getType())
                 .sort(categoryDTO.getSort())
                 .name(categoryDTO.getName())
-                .createTime(LocalDateTime.now())
-                .updateTime(LocalDateTime.now())
-                .createUser(BaseContext.getCurrentId())
-                .updateUser(BaseContext.getCurrentId())
                 .build();
 
         categoryMapper.addNewCategory(category);
@@ -99,6 +102,21 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(Long id) {
 
         categoryMapper.deleteCategory(id);
+
+    }
+
+    /**
+     * 根据类型查询分类
+     *
+     * @param type
+     * @return
+     */
+    @Override
+    public List<Category> getCategoryByType(Integer type) {
+
+        List<Category> categoryList = categoryMapper.getCategoryByType(type);
+
+        return categoryList;
 
     }
 }
